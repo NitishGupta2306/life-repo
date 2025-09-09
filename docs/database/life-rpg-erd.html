@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life RPG Database Schema</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+        .content {
+            padding: 2rem;
+        }
+        .diagram-container {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .stat-card {
+            background: #f1f5f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-card h3 {
+            margin: 0 0 0.5rem 0;
+            color: #1e293b;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .stat-card p {
+            margin: 0;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            border-left: 4px solid;
+        }
+        .character { border-left-color: #3b82f6; }
+        .skills { border-left-color: #10b981; }
+        .quests { border-left-color: #f59e0b; }
+        .adhd { border-left-color: #ef4444; }
+        .brain-dump { border-left-color: #8b5cf6; }
+        .support { border-left-color: #06b6d4; }
+        .reflections { border-left-color: #ec4899; }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            margin-right: 12px;
+        }
+        .character .legend-color { background: #3b82f6; }
+        .skills .legend-color { background: #10b981; }
+        .quests .legend-color { background: #f59e0b; }
+        .adhd .legend-color { background: #ef4444; }
+        .brain-dump .legend-color { background: #8b5cf6; }
+        .support .legend-color { background: #06b6d4; }
+        .reflections .legend-color { background: #ec4899; }
+        
+        .access-info {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        .access-info h3 {
+            margin: 0 0 1rem 0;
+            color: #0c4a6e;
+        }
+        .access-info code {
+            background: #e0f2fe;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Life RPG Database</h1>
+            <p>Complete gamified life management system with ADHD support</p>
+        </div>
+        
+        <div class="content">
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>38</h3>
+                    <p>Total Tables</p>
+                </div>
+                <div class="stat-card">
+                    <h3>332</h3>
+                    <p>Total Columns</p>
+                </div>
+                <div class="stat-card">
+                    <h3>15</h3>
+                    <p>Enum Types</p>
+                </div>
+                <div class="stat-card">
+                    <h3>7</h3>
+                    <p>System Modules</p>
+                </div>
+            </div>
+
+            <h2>System Overview</h2>
+            <div class="legend">
+                <div class="legend-item character">
+                    <div class="legend-color"></div>
+                    <div>
+                        <strong>Character System</strong><br>
+                        <small>Profile, stats, resources, debuffs</small>
+                    </div>
+                </div>
+                <div class="legend-item skills">
+                    <div class="legend-color"></div>
+                    <div>
+                        <strong>Skills System</strong><br>
+                        <small>Skill trees, individual skills, XP tracking</small>
+                    </div>
+                </div>
+                <div class="legend-item quests">
+                    <div class="legend-color"></div>
+                    <div>
+                        <strong>Quest System</strong><br>
+                        <small>Quests, objectives, boss battles</small>
+                    </div>
+                </div>
+                <div class="legend-item adhd">
+                    <div class="legend-color"></div>
+                    <div>
+                        <strong>ADHD Support</strong><br>
+                        <small>Basic needs, spoons, focus sessions</small>
+                    </div>
+                </div>
+                <div class="legend-item brain-dump">
+                    <div class="legend-color"></div>
+                    <div>
+                        <strong>Brain Dump System</strong><br>
+                        <small>AI processing, pattern recognition</small>
+                    </div>
+                </div>
+                <div class="legend-item support">
+                    <div class="legend-color"></div>
+                    <div>
+                        <strong>Support Systems</strong><br>
+                        <small>Achievements, inventory, reminders</small>
+                    </div>
+                </div>
+                <div class="legend-item reflections">
+                    <div class="legend-color"></div>
+                    <div>
+                        <strong>Reflections</strong><br>
+                        <small>Daily/weekly tracking, patterns</small>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Database Relationship Diagram</h2>
+            <div class="diagram-container">
+                <div class="mermaid">
+erDiagram
+    %% Character System
+    character_profile {
+        uuid id PK
+        text character_name
+        integer character_level "Age"
+        integer total_xp
+        text character_class
+        text avatar_url
+        timestamp created_at
+        timestamp last_login
+    }
+    
+    character_stats {
+        uuid id PK
+        text stat_name
+        integer base_value
+        integer current_value
+        integer max_value
+        enum stat_category
+        timestamp updated_at
+    }
+    
+    character_resources {
+        uuid id PK
+        enum resource_type "energy, focus, motivation, spoons"
+        integer current_value
+        integer max_value
+        integer regen_rate
+        timestamp last_updated
+        jsonb modifiers
+    }
+
+    %% Skill System
+    skill_trees {
+        uuid id PK
+        text tree_name "Life domains"
+        integer tree_level
+        integer total_tree_xp
+        integer skill_points_available
+        decimal mastery_percentage
+        boolean is_unlocked
+        text icon
+        text color_hex
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    skills {
+        uuid id PK
+        uuid tree_id FK
+        text skill_name
+        integer skill_level
+        integer current_xp
+        integer xp_to_next_level
+        enum skill_rank
+        boolean unlocked
+        uuid[] prerequisites
+        timestamp unlocked_at
+    }
+    
+    xp_transactions {
+        uuid id PK
+        uuid skill_id FK
+        integer xp_amount
+        text source_type
+        text source_description
+        timestamp earned_at
+        jsonb metadata
+    }
+
+    %% Quest System
+    quests {
+        uuid id PK
+        text quest_title
+        text description
+        enum quest_type "main, side, daily"
+        enum quest_status
+        enum priority
+        enum difficulty
+        integer xp_reward
+        uuid[] skill_rewards
+        timestamp due_date
+        timestamp created_at
+        timestamp completed_at
+        boolean is_recurring
+        text recurrence_pattern
+    }
+    
+    quest_objectives {
+        uuid id PK
+        uuid quest_id FK
+        text objective_description
+        boolean is_completed
+        integer completion_value
+        integer target_value
+        text completion_criteria
+        timestamp completed_at
+    }
+
+    %% ADHD Support
+    basic_needs {
+        uuid id PK
+        text need_name "shower, eat, medication"
+        boolean is_completed
+        timestamp completed_at
+        timestamp due_at
+        integer streak_count
+        enum importance
+        text completion_notes
+        integer energy_cost
+        integer focus_cost
+    }
+    
+    spoon_tracker {
+        uuid id PK
+        integer spoons_available
+        integer spoons_used
+        integer spoons_recovered
+        date tracking_date
+        text energy_notes
+        text activities_completed
+        enum overall_mood
+        timestamp recorded_at
+    }
+    
+    focus_sessions {
+        uuid id PK
+        integer duration_minutes
+        enum session_type "pomodoro, deep_work, break"
+        boolean completed_successfully
+        text task_worked_on
+        integer productivity_rating
+        text notes
+        timestamp started_at
+        timestamp ended_at
+        jsonb session_data
+    }
+
+    %% Brain Dump System
+    brain_dumps {
+        uuid id PK
+        text raw_content
+        text processed_content
+        enum processing_status
+        text mood_detected
+        text[] tags_detected
+        uuid[] related_quests
+        uuid[] related_skills
+        enum priority_detected
+        timestamp created_at
+        timestamp processed_at
+        jsonb ai_insights
+    }
+    
+    ai_processing_results {
+        uuid id PK
+        uuid brain_dump_id FK
+        text processing_type
+        text result_data
+        decimal confidence_score
+        boolean human_validated
+        timestamp processed_at
+        text model_version
+        jsonb raw_response
+    }
+
+    %% Support Systems
+    achievements {
+        uuid id PK
+        text achievement_name
+        text description
+        enum achievement_type
+        enum rarity
+        integer xp_reward
+        text icon_url
+        boolean is_unlocked
+        decimal progress_percentage
+        timestamp unlocked_at
+        jsonb unlock_criteria
+    }
+
+    %% Reflections
+    daily_reflections {
+        uuid id PK
+        date reflection_date
+        enum morning_mood
+        enum evening_mood
+        integer energy_level
+        integer productivity_rating
+        text gratitude_notes
+        text challenges_faced
+        text wins_celebrated
+        text tomorrow_intentions
+        timestamp created_at
+    }
+
+    %% Key Relationships
+    character_profile ||--o{ character_stats : "has"
+    character_profile ||--o{ character_resources : "has"
+    character_profile ||--o{ skill_trees : "owns"
+    character_profile ||--o{ quests : "undertakes"
+    character_profile ||--o{ basic_needs : "tracks"
+    character_profile ||--o{ brain_dumps : "creates"
+    character_profile ||--o{ achievements : "earns"
+    character_profile ||--o{ daily_reflections : "writes"
+    
+    skill_trees ||--o{ skills : "contains"
+    skills ||--o{ xp_transactions : "receives"
+    quests ||--o{ quest_objectives : "has"
+    brain_dumps ||--o{ ai_processing_results : "processed_by"
+                </div>
+            </div>
+
+            <div class="access-info">
+                <h3>🔗 Database Access</h3>
+                <p><strong>Connection URL:</strong> <code>postgresql://postgres:postgres@localhost:5433/life_rpg</code></p>
+                <p><strong>Drizzle Studio:</strong> <a href="https://local.drizzle.studio" target="_blank">https://local.drizzle.studio</a></p>
+                <p><strong>Schema Files:</strong> <code>/database/schemas/</code> (modular organization)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#3b82f6',
+                primaryTextColor: '#1e293b',
+                primaryBorderColor: '#e2e8f0',
+                lineColor: '#64748b',
+                secondaryColor: '#f8fafc',
+                tertiaryColor: '#f1f5f9'
+            }
+        });
+    </script>
+</body>
+</html>

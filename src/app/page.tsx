@@ -1,54 +1,119 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+        <div className="text-center sm:text-left">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Life RPG</h1>
+          <p className="text-lg text-gray-600 mb-8">
+            Transform your life into an engaging RPG adventure with analytics, reflections, and progress tracking.
+          </p>
+        </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+        <div className="flex gap-4 items-center flex-col sm:flex-row mb-8">
           <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-blue-600 text-white gap-2 hover:bg-blue-700 font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
+            href="/adhd"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+            <span>🧠</span>
+            ADHD Support Hub
           </a>
           <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-red-600 text-white gap-2 hover:bg-red-700 font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
+            href="/character"
           >
-            Read our docs
+            <span>⚔️</span>
+            Character Dashboard
           </a>
+          <a
+            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-purple-600 text-white gap-2 hover:bg-purple-700 font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
+            href="/quests"
+          >
+            <span>📋</span>
+            Quest Board
+          </a>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
+          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">📊 Analytics Dashboard</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Track your progress, view insights, and monitor your personal growth journey.
+            </p>
+            <Link 
+              href="/analytics"
+              className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              View Dashboard
+            </Link>
+          </div>
+
+          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">🗓️ Daily Reflection</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Take a moment to reflect on your day, track mood, and set intentions.
+            </p>
+            <Link 
+              href="/analytics/daily"
+              className="inline-block px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              Start Reflecting
+            </Link>
+          </div>
+
+          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">📝 Weekly Review</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Review your week, identify patterns, and plan for continued growth.
+            </p>
+            <Link 
+              href="/analytics/weekly"
+              className="inline-block px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+            >
+              Weekly Review
+            </Link>
+          </div>
+
+          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">🏆 Achievements</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              View your unlocked achievements and track progress toward new milestones.
+            </p>
+            <Link 
+              href="/analytics/achievements"
+              className="inline-block px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
+            >
+              View Achievements
+            </Link>
+          </div>
+
+          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">🧠 Brain Dump</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Clear your mind by dumping thoughts and ideas into your digital brain.
+            </p>
+            <Link 
+              href="/brain-dump"
+              className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Brain Dump
+            </Link>
+          </div>
+
+          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">🧠 ADHD Support</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              Access ADHD-friendly tools, spoon counting, and gentle productivity support.
+            </p>
+            <Link 
+              href="/adhd"
+              className="inline-block px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+            >
+              Support Hub
+            </Link>
+          </div>
         </div>
       </main>
       <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
