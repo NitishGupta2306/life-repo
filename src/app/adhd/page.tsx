@@ -17,7 +17,7 @@ import {
   Coffee, 
   Droplets, 
   Utensils, 
-  Shower,
+  ShowerHead,
   Pill,
   Timer,
   Sparkles,
@@ -129,7 +129,7 @@ export default function ADHDDashboard() {
 
   const getNeedIcon = (category: string) => {
     switch (category) {
-      case 'hygiene': return <Shower className="h-5 w-5" />;
+      case 'hygiene': return <ShowerHead className="h-5 w-5" />;
       case 'nutrition': return <Utensils className="h-5 w-5" />;
       case 'hydration': return <Droplets className="h-5 w-5" />;
       case 'medication': return <Pill className="h-5 w-5" />;
