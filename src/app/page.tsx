@@ -1,168 +1,252 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, Brain, Send, CheckCircle2, Clock, AlertCircle, CheckSquare, BookOpen } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
+  const [ideaText, setIdeaText] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [recentSubmissions, setRecentSubmissions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Load recent submissions from database
+  const loadRecentSubmissions = async () => {
+    try {
+      const response = await fetch('/api/recent-submissions?limit=5');
+      const data = await response.json();
+      
+      if (data.success) {
+        setRecentSubmissions(data.submissions);
+      }
+    } catch (error) {
+      console.error('Failed to load recent submissions:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Load submissions on component mount
+  useEffect(() => {
+    loadRecentSubmissions();
+  }, []);
+
+  const handleIdeaSubmit = async (type: "task" | "note") => {
+    if (!ideaText.trim()) return;
+    
+    setIsProcessing(true);
+    
+    try {
+      const response = await fetch('/api/process-idea', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: ideaText,
+          type: type,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Reload recent submissions to get fresh data from database
+        await loadRecentSubmissions();
+        setIdeaText("");
+      } else {
+        console.error('Error:', data.error);
+        // Handle error - maybe show a toast notification
+      }
+    } catch (error) {
+      console.error('Failed to process idea:', error);
+      // Handle error - maybe show a toast notification
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <div className="text-center sm:text-left">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Life RPG</h1>
-          <p className="text-lg text-gray-600 mb-8">
-            Transform your life into an engaging RPG adventure with analytics, reflections, and progress tracking.
-          </p>
-        </div>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row mb-8">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-blue-600 text-white gap-2 hover:bg-blue-700 font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="/adhd"
-          >
-            <span>🧠</span>
-            ADHD Support Hub
-          </a>
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-red-600 text-white gap-2 hover:bg-red-700 font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="/character"
-          >
-            <span>⚔️</span>
-            Character Dashboard
-          </a>
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-purple-600 text-white gap-2 hover:bg-purple-700 font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="/quests"
-          >
-            <span>📋</span>
-            Quest Board
-          </a>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-4xl">
-          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">📊 Analytics Dashboard</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Track your progress, view insights, and monitor your personal growth journey.
-            </p>
-            <Link 
-              href="/analytics"
-              className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              View Dashboard
-            </Link>
-          </div>
-
-          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">🗓️ Daily Reflection</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Take a moment to reflect on your day, track mood, and set intentions.
-            </p>
-            <Link 
-              href="/analytics/daily"
-              className="inline-block px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-            >
-              Start Reflecting
-            </Link>
-          </div>
-
-          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">📝 Weekly Review</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Review your week, identify patterns, and plan for continued growth.
-            </p>
-            <Link 
-              href="/analytics/weekly"
-              className="inline-block px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              Weekly Review
-            </Link>
-          </div>
-
-          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">🏆 Achievements</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              View your unlocked achievements and track progress toward new milestones.
-            </p>
-            <Link 
-              href="/analytics/achievements"
-              className="inline-block px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors"
-            >
-              View Achievements
-            </Link>
-          </div>
-
-          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">🧠 Brain Dump</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Clear your mind by dumping thoughts and ideas into your digital brain.
-            </p>
-            <Link 
-              href="/brain-dump"
-              className="inline-block px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
-            >
-              Brain Dump
-            </Link>
-          </div>
-
-          <div className="p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">🧠 ADHD Support</h3>
-            <p className="text-sm text-gray-600 mb-4">
-              Access ADHD-friendly tools, spoon counting, and gentle productivity support.
-            </p>
-            <Link 
-              href="/adhd"
-              className="inline-block px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
-            >
-              Support Hub
-            </Link>
+    <div className="min-h-screen bg-background">
+      <div className="max-w-4xl mx-auto p-6">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between">
+            <div className="text-center flex-1">
+              <h1 className="text-4xl font-bold mb-2">🧠 Intelligent Project Assistant</h1>
+              <p className="text-muted-foreground mb-4">
+                <strong>Next-Level AI Planning:</strong> Describe any project, goal, or idea, and I'll create detailed action plans, smart checklists, realistic deadlines, and perfect organization.
+              </p>
+              <div className="flex flex-wrap justify-center gap-2 text-xs">
+                <Badge variant="secondary">📋 Smart Checklists</Badge>
+                <Badge variant="secondary">⏰ Deadline Suggestions</Badge>
+                <Badge variant="secondary">🎯 Priority Assessment</Badge>
+                <Badge variant="secondary">🔧 Tech Stack Recognition</Badge>
+                <Badge variant="secondary">📊 Scope Analysis</Badge>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Link href="/tasks">
+                <Button variant="outline" size="sm">
+                  <CheckSquare className="h-4 w-4 mr-2" />
+                  Tasks
+                </Button>
+              </Link>
+              <Link href="/notes">
+                <Button variant="outline" size="sm">
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  Notes
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        {/* Main Idea Dump Card */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Brain className="h-5 w-5 text-primary" />
+              What's on your mind?
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Textarea
+              placeholder="Try: 'Create a dashboard for tracking user analytics with React and PostgreSQL' or 'Plan a mobile app for fitness tracking with real-time data' or 'Research machine learning tools for data analysis'..."
+              value={ideaText}
+              onChange={(e) => setIdeaText(e.target.value)}
+              className="min-h-[150px] text-base"
+              disabled={isProcessing}
+            />
+            <div className="text-xs text-muted-foreground bg-muted/30 p-3 rounded">
+              💡 <strong>Smart Examples:</strong> "Build a dashboard for xyz", "Learn React with TypeScript", "Automate my email workflow", "Create budget plan with emergency fund", "Design portfolio website"
+            </div>
+            <div className="flex gap-3">
+              <Button 
+                onClick={() => handleIdeaSubmit("task")} 
+                disabled={!ideaText.trim() || isProcessing}
+                className="flex-1"
+              >
+                {isProcessing ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="h-4 w-4 mr-2" />
+                )}
+                🚀 Create Action Plan
+              </Button>
+              <Button 
+                onClick={() => handleIdeaSubmit("note")} 
+                disabled={!ideaText.trim() || isProcessing}
+                variant="outline"
+                className="flex-1"
+              >
+                {isProcessing ? (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                ) : (
+                  <Send className="h-4 w-4 mr-2" />
+                )}
+                📝 Create Knowledge Note
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Submissions */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              🎯 Recent AI-Processed Projects
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {isLoading ? (
+              <div className="text-center py-8 text-muted-foreground flex items-center justify-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Loading recent submissions...
+              </div>
+            ) : recentSubmissions.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                No recent submissions. Start dumping your ideas above!
+              </div>
+            ) : (
+              recentSubmissions.map((submission) => (
+                <div key={submission.id} className="border rounded-lg p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Badge variant={submission.type === "task" ? "default" : "secondary"}>
+                        {submission.type}
+                      </Badge>
+                      {submission.details?.priority && (
+                        <Badge variant={
+                          submission.details.priority === "urgent" ? "destructive" : 
+                          submission.details.priority === "high" ? "destructive" :
+                          submission.details.priority === "medium" ? "default" : "outline"
+                        }>
+                          {submission.details.priority}
+                        </Badge>
+                      )}
+                      {submission.details?.difficulty && (
+                        <Badge variant="outline">
+                          {submission.details.difficulty}
+                        </Badge>
+                      )}
+                    </div>
+                    <span className="text-xs text-muted-foreground">{submission.timestamp}</span>
+                  </div>
+                  
+                  <div>
+                    <p className="text-sm font-medium mb-1">Original:</p>
+                    <p className="text-sm text-muted-foreground">{submission.text}</p>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-green-500" />
+                    <span className="text-sm text-green-600">{submission.result}</span>
+                  </div>
+                  
+                  {submission.details && (
+                    <div className="bg-muted/50 rounded p-3 space-y-2">
+                      <p className="text-sm font-medium">Processed Details:</p>
+                      <div className="grid grid-cols-2 gap-2 text-xs">
+                        {submission.details.project && (
+                          <div><span className="font-medium">Project:</span> {submission.details.project}</div>
+                        )}
+                        {submission.details.area && (
+                          <div><span className="font-medium">Area:</span> {submission.details.area}</div>
+                        )}
+                        {submission.details.dueDate && (
+                          <div><span className="font-medium">Due:</span> {submission.details.dueDate}</div>
+                        )}
+                        {submission.details.subAreas && submission.details.subAreas.length > 0 && (
+                          <div><span className="font-medium">Sub-areas:</span> {submission.details.subAreas.join(', ')}</div>
+                        )}
+                      </div>
+                      {submission.details.checklist && submission.details.checklist.length > 0 && (
+                        <div>
+                          <p className="text-xs font-medium mb-1">Checklist created:</p>
+                          <ul className="text-xs space-y-1">
+                            {submission.details.checklist.map((item, i) => (
+                              <li key={i} className="flex items-center gap-2">
+                                <div className="w-2 h-2 border border-muted-foreground rounded-sm"></div>
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
