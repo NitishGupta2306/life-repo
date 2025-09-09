@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 "use client"
-
-=======
->>>>>>> feature/quest-management
 import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 
@@ -55,8 +51,4 @@ const TabsContent = React.forwardRef<
 ))
 TabsContent.displayName = TabsPrimitive.Content.displayName
 
-<<<<<<< HEAD
 export { Tabs, TabsList, TabsTrigger, TabsContent }
-=======
-export { Tabs, TabsList, TabsTrigger, TabsContent }
->>>>>>> feature/quest-management

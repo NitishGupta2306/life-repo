@@ -33,8 +33,4 @@ function Badge({ className, variant, ...props }: BadgeProps) {
   )
 }
 
-<<<<<<< HEAD
 export { Badge, badgeVariants }
-=======
-export { Badge, badgeVariants }
->>>>>>> feature/quest-management
