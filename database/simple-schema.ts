@@ -4,6 +4,7 @@ import { pgTable, text, uuid, timestamp, integer, boolean, pgEnum } from 'drizzl
 export const priorityEnum = pgEnum('priority', ['low', 'medium', 'high', 'urgent']);
 export const difficultyEnum = pgEnum('difficulty', ['easy', 'medium', 'hard']);
 export const taskStatusEnum = pgEnum('task_status', ['todo', 'in_progress', 'completed', 'cancelled']);
+export const templateCategoryEnum = pgEnum('template_category', ['dashboard', 'website', 'mobile', 'automation', 'learning', 'business', 'creative', 'research']);
 
 // Projects table
 export const projects = pgTable('projects', {
@@ -54,6 +55,27 @@ export const ideaDumps = pgTable('idea_dumps', {
   processedAt: timestamp('processed_at'),
 });
 
+// Project templates table
+export const projectTemplates = pgTable('project_templates', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  description: text('description').notNull(),
+  category: templateCategoryEnum('category').notNull(),
+  area: text('area').notNull(), // Work, Personal, Learning, etc.
+  technologies: text('technologies'), // JSON array of tech stack
+  estimatedDuration: text('estimated_duration'), // e.g., "2-3 weeks", "1 month"
+  difficulty: difficultyEnum('difficulty').default('medium').notNull(),
+  taskTemplate: text('task_template'), // JSON template for initial tasks
+  checklistTemplate: text('checklist_template'), // JSON template for checklist items
+  prerequisites: text('prerequisites'), // JSON array of required skills/tools
+  learningObjectives: text('learning_objectives'), // JSON array of what you'll learn
+  popularityScore: integer('popularity_score').default(0).notNull(), // For ranking templates
+  isActive: boolean('is_active').default(true).notNull(),
+  createdBy: text('created_by').default('system').notNull(), // system, user, community
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
 // Type exports
 export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
@@ -63,3 +85,5 @@ export type Note = typeof notes.$inferSelect;
 export type NewNote = typeof notes.$inferInsert;
 export type IdeaDump = typeof ideaDumps.$inferSelect;
 export type NewIdeaDump = typeof ideaDumps.$inferInsert;
+export type ProjectTemplate = typeof projectTemplates.$inferSelect;
+export type NewProjectTemplate = typeof projectTemplates.$inferInsert;

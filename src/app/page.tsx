@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Brain, Send, CheckCircle2, Clock, AlertCircle, CheckSquare, BookOpen } from "lucide-react";
+import { Loader2, Brain, Send, CheckCircle2, Clock, AlertCircle, CheckSquare, BookOpen, Zap } from "lucide-react";
 import Link from "next/link";
 
 export default function Home() {
@@ -90,6 +90,12 @@ export default function Home() {
               </div>
             </div>
             <div className="flex gap-2">
+              <Link href="/templates">
+                <Button variant="default" size="sm" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+                  <Zap className="h-4 w-4 mr-2" />
+                  Templates
+                </Button>
+              </Link>
               <Link href="/tasks">
                 <Button variant="outline" size="sm">
                   <CheckSquare className="h-4 w-4 mr-2" />
