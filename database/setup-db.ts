@@ -2,6 +2,7 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as dotenv from "dotenv";
 import { sql } from "drizzle-orm";
+import { seedProjectTemplates } from "./project-templates-seed";
 
 // Load environment variables
 dotenv.config({ path: ".env.local" });
@@ -27,6 +28,7 @@ async function setupDatabase() {
     await db.execute(sql`CREATE TYPE priority AS ENUM ('low', 'medium', 'high', 'urgent')`);
     await db.execute(sql`CREATE TYPE difficulty AS ENUM ('easy', 'medium', 'hard')`);
     await db.execute(sql`CREATE TYPE task_status AS ENUM ('todo', 'in_progress', 'completed', 'cancelled')`);
+    await db.execute(sql`CREATE TYPE template_category AS ENUM ('dashboard', 'website', 'mobile', 'automation', 'learning', 'business', 'creative', 'research')`);
 
     // Create projects table
     await db.execute(sql`
@@ -85,7 +87,35 @@ async function setupDatabase() {
       )
     `);
 
+    // Create project_templates table
+    await db.execute(sql`
+      CREATE TABLE project_templates (
+        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        category template_category NOT NULL,
+        area TEXT NOT NULL,
+        technologies TEXT,
+        estimated_duration TEXT,
+        difficulty difficulty DEFAULT 'medium' NOT NULL,
+        task_template TEXT,
+        checklist_template TEXT,
+        prerequisites TEXT,
+        learning_objectives TEXT,
+        popularity_score INTEGER DEFAULT 0 NOT NULL,
+        is_active BOOLEAN DEFAULT true NOT NULL,
+        created_by TEXT DEFAULT 'system' NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW() NOT NULL,
+        updated_at TIMESTAMP DEFAULT NOW() NOT NULL
+      )
+    `);
+
     console.log("Database setup completed successfully!");
+    
+    // Seed project templates
+    console.log("Seeding project templates...");
+    await seedProjectTemplates();
+    console.log("Project templates seeded successfully!");
 
   } catch (error) {
     console.error("Error setting up database:", error);
